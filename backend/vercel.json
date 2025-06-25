@@ -1,12 +1,19 @@
 {
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/tasks",
-      "destination": "/api/tasks"
+      "src": "api/**/*.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/tasks",
+      "dest": "/api/tasks"
     },
     {
-      "source": "/tasks/(.*)",
-      "destination": "/api/tasks/$1"
+      "src": "/tasks/(.*)",
+      "dest": "/api/tasks/$1"
     }
   ]
 } 

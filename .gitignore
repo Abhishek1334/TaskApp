@@ -9,12 +9,12 @@ frontend/.next/
 frontend/out/
 frontend/dist/
 
-# NestJS
-backend/dist/
+# NestJS - commented out backend/dist since we need it for Vercel
+# backend/dist/
 backend/build/
 
-# Production builds
-**/dist/
+# Production builds - allow backend dist but ignore others
+frontend/dist/
 **/build/
 
 # Environment variables
