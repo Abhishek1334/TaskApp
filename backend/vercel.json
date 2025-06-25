@@ -1,35 +1,20 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "src/main.ts",
-      "use": "@vercel/node"
+  "functions": {
+    "api/tasks.ts": {
+      "runtime": "@vercel/node"
+    },
+    "api/tasks/[id].ts": {
+      "runtime": "@vercel/node"
     }
-  ],
-  "routes": [
+  },
+  "rewrites": [
     {
-      "src": "/tasks",
-      "dest": "src/main.ts",
-      "methods": ["GET", "POST", "OPTIONS"]
+      "source": "/tasks",
+      "destination": "/api/tasks"
     },
     {
-      "src": "/tasks/(.*)",
-      "dest": "src/main.ts",
-      "methods": ["GET", "PUT", "DELETE", "OPTIONS"]
-    },
-    {
-      "src": "/(.*)",
-      "dest": "src/main.ts"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization, Accept" }
-      ]
+      "source": "/tasks/(.*)",
+      "destination": "/api/tasks/$1"
     }
   ]
 } 

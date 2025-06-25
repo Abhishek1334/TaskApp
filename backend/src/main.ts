@@ -7,13 +7,7 @@ async function bootstrap() {
   
   // Enable CORS for frontend communication
   app.enableCors({
-    origin: [
-      'http://localhost:3000', 
-      'http://127.0.0.1:3000',
-      // Allow all Vercel domains
-      /https:\/\/.*\.vercel\.app$/,
-      process.env.FRONTEND_URL
-    ].filter(Boolean),
+    origin: true, // Allow all origins for now
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: false,
@@ -31,19 +25,25 @@ async function bootstrap() {
   console.log(`🚀 Backend server is running on port ${port}`);
 }
 
-// For Vercel serverless functions
+// For Vercel serverless functions - manual CORS handling
 export default async (req: any, res: any) => {
+  // Set CORS headers manually for all requests
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');
+  res.setHeader('Access-Control-Max-Age', '86400');
+  
+  // Handle preflight OPTIONS requests
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   const app = await NestFactory.create(AppModule);
   
-  // Enable CORS with more permissive settings for Vercel
+  // Also enable CORS at NestJS level
   app.enableCors({
-    origin: [
-      'http://localhost:3000', 
-      'http://127.0.0.1:3000',
-      // Allow all Vercel domains
-      /https:\/\/.*\.vercel\.app$/,
-      process.env.FRONTEND_URL
-    ].filter(Boolean),
+    origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: false,
