@@ -8,8 +8,28 @@
   ],
   "routes": [
     {
+      "src": "/tasks",
+      "dest": "src/main.ts",
+      "methods": ["GET", "POST", "OPTIONS"]
+    },
+    {
+      "src": "/tasks/(.*)",
+      "dest": "src/main.ts",
+      "methods": ["GET", "PUT", "DELETE", "OPTIONS"]
+    },
+    {
       "src": "/(.*)",
       "dest": "src/main.ts"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization, Accept" }
+      ]
     }
   ]
 } 

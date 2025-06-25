@@ -10,11 +10,13 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000', 
       'http://127.0.0.1:3000',
-      // Add your Vercel frontend URL here (will be updated after frontend deployment)
-      process.env.FRONTEND_URL || 'https://*.vercel.app'
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+      // Allow all Vercel domains
+      /https:\/\/.*\.vercel\.app$/,
+      process.env.FRONTEND_URL
+    ].filter(Boolean),
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    credentials: false,
   });
 
   // Enable global validation pipe
@@ -33,14 +35,18 @@ async function bootstrap() {
 export default async (req: any, res: any) => {
   const app = await NestFactory.create(AppModule);
   
+  // Enable CORS with more permissive settings for Vercel
   app.enableCors({
     origin: [
       'http://localhost:3000', 
       'http://127.0.0.1:3000',
-      process.env.FRONTEND_URL || 'https://*.vercel.app'
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+      // Allow all Vercel domains
+      /https:\/\/.*\.vercel\.app$/,
+      process.env.FRONTEND_URL
+    ].filter(Boolean),
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    credentials: false,
   });
 
   app.useGlobalPipes(new ValidationPipe({
