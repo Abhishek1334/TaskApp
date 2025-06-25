@@ -1,12 +1,4 @@
 {
-  "functions": {
-    "api/tasks.ts": {
-      "runtime": "@vercel/node"
-    },
-    "api/tasks/[id].ts": {
-      "runtime": "@vercel/node"
-    }
-  },
   "rewrites": [
     {
       "source": "/tasks",
