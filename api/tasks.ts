@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
-// In-memory task storage
+// In-memory task storage (same as your NestJS service)
 interface Task {
   id: string;
   title: string;
@@ -28,57 +28,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).end();
   }
 
-  // Parse URL to determine if it's for a specific task
-  const url = req.url || '';
-  const pathParts = url.split('/').filter(Boolean);
-  const isSpecificTask = pathParts.length > 1; // /api/tasks/123 or /tasks/123
-  const taskId = isSpecificTask ? pathParts[pathParts.length - 1] : null;
-
   try {
-    // Handle specific task operations
-    if (isSpecificTask && taskId) {
-      const taskIndex = tasks.findIndex(task => task.id === taskId);
-
-      switch (req.method) {
-        case 'GET':
-          if (taskIndex === -1) {
-            return res.status(404).json({ message: 'Task not found' });
-          }
-          return res.status(200).json(tasks[taskIndex]);
-
-        case 'PUT':
-          if (taskIndex === -1) {
-            return res.status(404).json({ message: 'Task not found' });
-          }
-
-          const { completed } = req.body;
-          if (typeof completed !== 'boolean') {
-            return res.status(400).json({ message: 'Completed must be a boolean value' });
-          }
-
-          tasks[taskIndex] = {
-            ...tasks[taskIndex],
-            completed,
-            updatedAt: new Date(),
-          };
-
-          return res.status(200).json(tasks[taskIndex]);
-
-        case 'DELETE':
-          if (taskIndex === -1) {
-            return res.status(404).json({ message: 'Task not found' });
-          }
-
-          tasks.splice(taskIndex, 1);
-          return res.status(204).end();
-
-        default:
-          res.setHeader('Allow', ['GET', 'PUT', 'DELETE', 'OPTIONS']);
-          return res.status(405).json({ message: `Method ${req.method} not allowed` });
-      }
-    }
-
-    // Handle collection operations
     switch (req.method) {
       case 'GET':
         return res.status(200).json(tasks);
